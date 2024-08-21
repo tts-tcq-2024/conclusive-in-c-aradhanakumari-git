@@ -45,4 +45,4 @@ Think about guiding refactoring-work in your regular/project teams. Think of the
 You have seen a few workflows in this repository. They are quality-gates to prevent duplication, control complexity and prove functionality. Do you think some of them have potential to guide code-improvements in your team? yes
 
 During the next four weeks, what improvement do you plan in your code-quality practice? (in your regular work, not in this repository!)
-Get enhance on fixng the bugs and reducing the complexity where code is to be reusable and regularly review the codebase prioritize refactoring to improve code structure.
+reduce the complexity where code shall be reusable and review should be regularly done.
