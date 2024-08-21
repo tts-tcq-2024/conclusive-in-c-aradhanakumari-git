@@ -1,35 +1,34 @@
 #include "typewise-alert.h"
 #include <stdio.h>
 
-BreachType inferBreach(double value, double lowerLimit, double upperLimit) {
-  if(value < lowerLimit) {
+
+/*get temp range based on cooling type*/
+TemperatureRange getTemperatureRange(CoolingType coolingType) {
+  TemperatureRange ranges[] = {
+    {0, 35}, /*passive cooling*/
+    {0, 45}, /*high active cooling*/
+    {0, 40}  /*mid active cooling*/
+  };
+  return ranges[coolingType];
+}
+
+/* infer breach type based on value and limits*/
+BreachType inferBreach(double value, TemperatureRange range) {
+  if (value < range.lowerLimit) {
     return TOO_LOW;
   }
-  if(value > upperLimit) {
+  if (value > range.upperLimit) {
     return TOO_HIGH;
   }
   return NORMAL;
 }
 
-BreachType classifyTemperatureBreach(
-    CoolingType coolingType, double temperatureInC) {
-  int lowerLimit = 0;
-  int upperLimit = 0;
-  switch(coolingType) {
-    case PASSIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 35;
-      break;
-    case HI_ACTIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 45;
-      break;
-    case MED_ACTIVE_COOLING:
-      lowerLimit = 0;
-      upperLimit = 40;
-      break;
-  }
-  return inferBreach(temperatureInC, lowerLimit, upperLimit);
+
+
+/*differentiate temp breach based on cooling type and temp*/
+BreachType classifyTemperatureBreach(CoolingType coolingType, double temperatureInC) {
+  TemperatureRange range = getTemperatureRange(coolingType);
+  return inferBreach(temperatureInC, range);
 }
 
 void checkAndAlert(
@@ -56,16 +55,11 @@ void sendToController(BreachType breachType) {
 
 void sendToEmail(BreachType breachType) {
   const char* recepient = "a.b@c.com";
-  switch(breachType) {
-    case TOO_LOW:
-      printf("To: %s\n", recepient);
-      printf("Hi, the temperature is too low\n");
-      break;
-    case TOO_HIGH:
-      printf("To: %s\n", recepient);
-      printf("Hi, the temperature is too high\n");
-      break;
-    case NORMAL:
-      break;
+  if (breachType == TOO_LOW) {
+    printf("To: %s\n", recepient);
+    printf("Hi, the temperature is too low\n");
+  } else if (breachType == TOO_HIGH) {
+    printf("To: %s\n", recepient);
+    printf("Hi, the temperature is too high\n");
   }
 }
